@@ -7,13 +7,27 @@ const Student = require('./models/Student');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const MONGODB_DATABASE = 'cloud-lab';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+if (!MONGODB_URI) {
+  throw new Error('MONGODB_URI is not configured');
+}
+
+mongoose.connect(MONGODB_URI, { dbName: MONGODB_DATABASE })
+  .then(() => {
+    console.log(`Connected to MongoDB database: ${MONGODB_DATABASE}`);
+    app.listen(PORT, () => {
+      console.log(`Server active on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err);
+    process.exitCode = 1;
+  });
 
 // Câu 36: GET /api/students - Lay danh sach
 app.get('/api/students', async (req, res) => {
@@ -53,8 +67,4 @@ app.delete('/api/students/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`Server active on port ${PORT}`);
 });
