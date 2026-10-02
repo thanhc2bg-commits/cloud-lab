@@ -48,53 +48,61 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h2>Quan Ly Sinh Vien (MERN)</h2>
-      <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+    <div className="app-container">
+      <h2>Hệ Thống Quản Lý Sinh Viên (MERN)</h2>
+      
+      <form onSubmit={handleSubmit} className="student-form">
         <input
+          className="form-input"
           placeholder="MSSV"
           value={form.studentId}
           onChange={(e) => setForm({ ...form, studentId: e.target.value })}
           required
         />
         <input
-          placeholder="Ho Ten"
+          className="form-input"
+          placeholder="Họ Tên"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           required
         />
         <input
+          className="form-input"
           placeholder="Email"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           required
         />
-        <button type="submit">{editingId ? 'Cap Nhat' : 'Them Sinh Vien'}</button>
+        <button type="submit" className="btn btn-primary">
+          {editingId ? 'Cập Nhật' : 'Thêm Sinh Viên'}
+        </button>
       </form>
 
-      <table border="1" cellPadding="8" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>MSSV</th>
-            <th>Ho Ten</th>
-            <th>Email</th>
-            <th>Thao Tac</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.map((s) => (
-            <tr key={s._id}>
-              <td>{s.studentId}</td>
-              <td>{s.name}</td>
-              <td>{s.email}</td>
-              <td>
-                <button onClick={() => handleEdit(s)}>Sua</button>
-                <button onClick={() => handleDelete(s._id)}>Xoa</button>
-              </td>
+      <div className="table-container">
+        <table className="student-table">
+          <thead>
+            <tr>
+              <th>MSSV</th>
+              <th>Họ Tên</th>
+              <th>Email</th>
+              <th>Thao Tác</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {students.map((s) => (
+              <tr key={s._id}>
+                <td>{s.studentId}</td>
+                <td>{s.name}</td>
+                <td>{s.email}</td>
+                <td>
+                  <button onClick={() => handleEdit(s)} className="btn btn-edit">Sửa</button>
+                  <button onClick={() => handleDelete(s._id)} className="btn btn-delete">Xóa</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
