@@ -10,7 +10,27 @@ const PORT = process.env.PORT || 5000;
 const MONGODB_DATABASE = 'cloud-lab';
 const MONGODB_URI = process.env.MONGODB_URI;
 
-app.use(cors());
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:3000'
+].filter(Boolean);
+
+app.use(cors({
+  origin(origin, callback) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      process.env.NODE_ENV !== 'production'
+    ) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error('Origin is not allowed by CORS'));
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 if (!MONGODB_URI) {
